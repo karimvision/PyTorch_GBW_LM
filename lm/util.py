@@ -39,9 +39,9 @@ def reverse(item):
         new_item[val] = idx
     return new_item
 
-def load_np(filepath):
+def load_np(filepath,item=True):
     npzfile = np.load(filepath)
-    return torch.from_numpy(npzfile['item'])
+    return torch.from_numpy(npzfile['item']) if item else torch.from_numpy(npzfile)
 
 def load_lua_tensor(filepath):
     return load_lua(filepath).long()

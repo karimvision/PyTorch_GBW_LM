@@ -10,14 +10,14 @@ from torch.utils.serialization import load_lua
 class FastGBWDataset(Dataset):
     """Preprocessed Google 1-Billion Word dataset."""
 
-    def __init__(self, path, name, sid, mapto):
+    def __init__(self, path, name, sid, mapto,lua_load=False):
         """
         Args:
             path (string): path to data file
             name (string): file name
             sid (string): file name - sentence id
         """
-        dataset = util.load_lua_tensor(os.path.join(path, name))
+        dataset = util.load_lua_tensor(os.path.join(path, name)) if lua_load else util.load_np(path,item=False)
         self.corpus = mapto[dataset[:, 1]-1]
         print("loaded tensor", self.corpus.size())
 
@@ -27,7 +27,7 @@ class FastGBWDataset(Dataset):
         self.num_words = self.corpus.shape[0]
         self.length, dim = self.sentence_id.shape
         print("#sentences", self.length)
-
+    
     def build(filepath):
         tensor = load_lua(filepath)
         vocab = dict()

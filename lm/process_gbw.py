@@ -5,10 +5,11 @@ import pickle
 import numpy as np
 import torch
 from torch.utils.serialization import load_lua
+from util import load_np
 
-def build(tensor_path):
+def build(tensor_path,lua_load=False):
     """ Convert data (sentence id, word id) into a list of sentences """
-    tensor = load_lua(tensor_path).long()
+    tensor = load_lua(tensor_path).long() if lua_load else load_np(tensor_path,item=False)
     num_words = tensor.size()[0]
 
     print("Processing words to find sentences")
@@ -40,16 +41,24 @@ def build(tensor_path):
         data[idx, 1] = length
     return data
 
-assert(len(sys.argv) == 3)
-path = sys.argv[1]
+def str2bool(v):
+    if v.lower() in ('yes', 'true', 't', 'y', '1'):
+        return True
+    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+        return False
+    else:
+        raise Exception('Boolean value expected.')
+        
+assert(len(sys.argv) == 4)
+dataset_file = sys.argv[1]
 filename = sys.argv[2]
-print("Filepath:", path)
+lua = str2bool(sys.argv[3]) # in case of th7 gbw dataset, else make it false if you have a custom numpy dataset
+
+print("dataset file:", dataset_file)
 print("Output:", filename)
+print("lua",lua)
 
-word_freq = load_lua(os.path.join(path, 'word_freq.th7')).numpy()
-print("Loaded Tensor")
-
-data = build(os.path.join(path, 'train_data.th7'))
+data = build(dataset_file,lua_load=lua)
 print("Build Sentence ID Tensor")
 
 with open(filename, 'wb') as f:
