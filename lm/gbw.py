@@ -32,7 +32,9 @@ class GBWDataset(Dataset):
             sentence_id, word_id = value
             if current_sentence_id != sentence_id:
                 if start_idx > 0:
-                    data.append(mapto[tensor[start_idx:idx, 1]-1])
+                    sentence_tokens = mapto[tensor[start_idx:idx, 1]-1] # filter sentences with length < 2
+                    if len(sentence_tokens) > 2:
+                        data.append(sentence_tokens)
                 current_sentence_id = sentence_id
                 start_idx = idx
         return data, num_words
@@ -109,7 +111,7 @@ class GBWDataset(Dataset):
             size = min(seq_remaining, batch_remaining)
             batch_end = curr + size
             seq_end = seq_pos + size
-
+            print(seq_id)
             # target is offset from source by 1
             source[curr:batch_end, batch_idx] = sequence[seq_pos:seq_end]
             target[curr:batch_end, batch_idx] = sequence[seq_pos+1:seq_end+1]
