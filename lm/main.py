@@ -201,6 +201,7 @@ try:
         print('| end of epoch {:3d} | time: {:5.2f}s | valid loss {:5.2f} | valid ppl {:8.2f}'
                .format(epoch, (time.time() - epoch_start_time), val_loss, math.exp(val_loss)))
         print('-' * 89)
+        print("saving model ..")
         # save the model
         state = {
             'epoch': epoch,
@@ -209,6 +210,7 @@ try:
             'val_loss': val_loss
         }
         torch.save(state,args.save)
+        print("done saving")
         sys.stdout.flush()
 except KeyboardInterrupt:
     print('-' * 89)
