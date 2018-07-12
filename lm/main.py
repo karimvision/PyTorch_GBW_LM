@@ -187,20 +187,27 @@ def train():
             print('| epoch {:3d} | {:5d}/{:5d} batches | lr {:02.2f} | ms/batch {:5.2f} | loss {:5.2f} | ppl {:8.2f}'
                   .format(epoch, batch, batch_len, args.lr, elapsed * 1000 / interval, loss.data[0], math.exp(loss.data[0])))
             start_time = time.time()
-            sys.stdout.flush()
+            sys.stdout.flush()  
 
 # At any point you can hit Ctrl + C to break out of training early.
 try:
     for epoch in range(1, args.epochs+1):
         epoch_start_time = time.time()
         train()
-
+        
         test_loader = test_corpus.batch_generator(seq_length=args.bptt, batch_size=eval_batch_size, shuffle=False)
         val_loss = evaluate(test_corpus, test_loader)
         print('-' * 89)
         print('| end of epoch {:3d} | time: {:5.2f}s | valid loss {:5.2f} | valid ppl {:8.2f}'
                .format(epoch, (time.time() - epoch_start_time), val_loss, math.exp(val_loss)))
         print('-' * 89)
+        # save the model
+        state = {
+            'epoch': epoch,
+            'state_dict': net.state_dict(),
+            'optimizer': optimizer.state_dict(),
+        }
+        torch.save(state,args.save)
         sys.stdout.flush()
 except KeyboardInterrupt:
     print('-' * 89)
