@@ -35,7 +35,6 @@ def build(tensor_path,lua_load=False):
             filtered_sentences[key] = val
     del sentences
     
-    print("Processing sentences - Building SID Tensor")
     num_sentences = len(filtered_sentences)
     data = np.empty((num_sentences, 2), dtype=np.int32)
     for idx, item in enumerate(filtered_sentences.items()):

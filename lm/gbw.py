@@ -111,7 +111,6 @@ class GBWDataset(Dataset):
             size = min(seq_remaining, batch_remaining)
             batch_end = curr + size
             seq_end = seq_pos + size
-            print(seq_id)
             # target is offset from source by 1
             source[curr:batch_end, batch_idx] = sequence[seq_pos:seq_end]
             target[curr:batch_end, batch_idx] = sequence[seq_pos+1:seq_end+1]
