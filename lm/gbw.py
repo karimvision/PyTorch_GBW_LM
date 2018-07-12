@@ -5,23 +5,24 @@ import numpy as np
 import torch
 from torch.utils.data import Dataset, DataLoader
 from torch.utils.serialization import load_lua
+from util import load_np
 
 class GBWDataset(Dataset):
     """Google 1-Billion Word dataset."""
 
-    def __init__(self, path, name, mapto):
+    def __init__(self, path, name, mapto,lua_load=False):
         """
         Args:
             path (string): path to data file
             name (string): file name
         """
-        self.corpus, self.num_words = self.build(os.path.join(path, name), mapto)
+        self.corpus, self.num_words = self.build(os.path.join(path, name), mapto,lua=lua_load)
         self.length = len(self.corpus)
         print("#sentences", self.length)
 
-    def build(self, tensor_path, mapto):
+    def build(self, tensor_path, mapto,lua=False):
         """ Convert data (sentence id, word id) into a list of sentences """
-        tensor = load_lua(tensor_path).long()
+        tensor = load_lua(tensor_path).long() if lua else load_np(tensor_path,item=False)
         num_words = tensor.shape[0]
 
         data = list()

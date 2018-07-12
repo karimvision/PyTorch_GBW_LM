@@ -17,7 +17,8 @@ class FastGBWDataset(Dataset):
             name (string): file name
             sid (string): file name - sentence id
         """
-        dataset = util.load_lua_tensor(os.path.join(path, name)) if lua_load else util.load_np(path,item=False)
+        tensor_path = os.path.join(path, name)
+        dataset = util.load_lua_tensor(tensor_path) if lua_load else util.load_np(tensor_path,item=False)
         self.corpus = mapto[dataset[:, 1]-1]
         print("loaded tensor", self.corpus.size())
 

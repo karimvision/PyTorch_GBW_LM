@@ -57,17 +57,17 @@ torch.cuda.manual_seed(args.seed)
 ###############################################################################
 
 # Torch
-word_freq = load_lua(os.path.join(args.data, 'word_freq.th7')).numpy()
+word_freq = np.load("data/word_counts.npy")
 mapto = torch.from_numpy(util.reverse(np.argsort(-word_freq))).long()
 print("load word frequency mapping - complete")
 
 ntokens = len(word_freq)
 nsampled = 8192
 
-train_corpus = FastGBWDataset(args.data, 'train_data.th7', 'train_data.sid', mapto)
+train_corpus = FastGBWDataset(args.data, 'wiki_corpus_test.npy', 'wiki_corpus_test.sid', mapto)
 print("load train data - complete")
 
-test_corpus = GBWDataset(args.data, 'test_data.th7', mapto)
+test_corpus = GBWDataset(args.data, 'wiki_validation.npy', mapto)
 print("load test data - complete")
 
 # Streaming
