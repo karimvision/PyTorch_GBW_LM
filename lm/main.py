@@ -206,6 +206,7 @@ try:
             'epoch': epoch,
             'state_dict': net.state_dict(),
             'optimizer': optimizer.state_dict(),
+            'val_loss': val_loss
         }
         torch.save(state,args.save)
         sys.stdout.flush()
