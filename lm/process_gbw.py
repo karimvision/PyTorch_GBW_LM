@@ -27,11 +27,18 @@ def build(tensor_path,lua_load=False):
 
             start_idx = idx
             current_sentence_id = sentence_id
-
+            
+    # filter sentences with low number of words < 2:
+    filtered_sentences = {}
+    for key,val in sentences.items():
+        if val[1] > 2: # atleast two words
+            filtered_sentences[key] = val
+    del sentences
+    
     print("Processing sentences - Building SID Tensor")
-    num_sentences = len(sentences)
+    num_sentences = len(filtered_sentences)
     data = np.empty((num_sentences, 2), dtype=np.int32)
-    for idx, item in enumerate(sentences.items()):
+    for idx, item in enumerate(filtered_sentences.items()):
         if (idx % 100000) == 0:
             print(idx, num_sentences)
 
@@ -39,6 +46,7 @@ def build(tensor_path,lua_load=False):
         start_idx, length = value
         data[idx, 0] = start_idx
         data[idx, 1] = length
+    print(data.shape)
     return data
 
 def str2bool(v):
