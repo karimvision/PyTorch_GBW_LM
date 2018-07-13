@@ -65,7 +65,7 @@ torch.cuda.manual_seed(args.seed)
 ###############################################################################
 
 # Torch
-word_freq = np.load(os.path.join(args.data,args.freq_file)
+word_freq = np.load(os.path.join(args.data,args.freq_file))
 mapto = torch.from_numpy(util.reverse(np.argsort(-word_freq))).long()
 print("load word frequency mapping - complete")
 
