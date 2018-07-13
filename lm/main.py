@@ -20,6 +20,14 @@ import util
 parser = argparse.ArgumentParser(description='PyTorch LSTM Language Model')
 parser.add_argument('--data', type=str, default='../data/gbw',
                     help='location of the data corpus')
+parser.add_argument('--train_file', type=str, default='../data/gbw',
+                    help='location of the training file')
+parser.add_argument('--validation_file', type=str, default='../data/gbw',
+                    help='location of the training file')
+parser.add_argument('--freq_file', type=str, default='../data/gbw',
+                    help='location of the word_freq file')
+parser.add_argument('--sid_file', type=str, default='../data/gbw',
+                    help='location of the sid file')
 parser.add_argument('--emsize', type=int, default=256,
                     help='size of word embeddings')
 parser.add_argument('--proj', type=bool, default=True,
@@ -57,17 +65,17 @@ torch.cuda.manual_seed(args.seed)
 ###############################################################################
 
 # Torch
-word_freq = np.load("data/word_freq.npy")
+word_freq = np.load(os.path.join(args.data,args.freq_file)
 mapto = torch.from_numpy(util.reverse(np.argsort(-word_freq))).long()
 print("load word frequency mapping - complete")
 
 ntokens = len(word_freq)
 nsampled = 8192
 
-train_corpus = FastGBWDataset(args.data, 'wiki_corpus_test.npy', 'wiki_corpus_test.sid', mapto)
+train_corpus = FastGBWDataset(args.data, args.train_file, args.sid_file, mapto)
 print("load train data - complete")
 
-test_corpus = GBWDataset(args.data, 'wiki_validation.npy', mapto)
+test_corpus = GBWDataset(args.data, args.validation_file, mapto)
 print("load test data - complete")
 
 # Streaming
